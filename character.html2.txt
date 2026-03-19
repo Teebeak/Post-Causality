@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERSONNEL ARCHIVE - 因果後</title>
+    <!-- 폰트: 고전적 세리프와 현대적 산세리프 조합 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@200;300;400;600&family=Noto+Serif+KR:wght@300;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === GLOBAL SETTINGS === */
+        :root {
+            --bg-color: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.6);
+            --accent-gold: #c5a358;
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --font-title: 'Cinzel', 'Noto Serif KR', serif;
+            --font-body: 'Inter', sans-serif;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        /* 스크롤바 (Mac 스타일) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        /* === HEADER === */
+        .page-header {
+            padding: 100px 20px 60px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-title {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            letter-spacing: 10px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .page-subtitle {
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* === MENU BUTTON (Mac Style) === */
+        .menu-btn {
+            position: fixed; top: 40px; right: 40px; z-index: 8000;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            padding: 15px; cursor: pointer; backdrop-filter: blur(10px);
+            border-radius: 2px; transition: 0.3s;
+        }
+        .menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
+        .menu-line { display: block; width: 22px; height: 1px; background: #fff; position: relative; transition: 0.3s; }
+        .menu-line::before, .menu-line::after { content: ''; position: absolute; width: 22px; height: 1px; background: #fff; transition: 0.3s; }
+        .menu-line::before { top: -7px; } .menu-line::after { top: 7px; }
+
+        .menu-btn.open .menu-line { background: transparent; }
+        .menu-btn.open .menu-line::before { top: 0; transform: rotate(45deg); }
+        .menu-btn.open .menu-line::after { top: 0; transform: rotate(-45deg); }
+
+        /* === SIDE NAV (Glassmorphism) === */
+        .side-nav {
+            position: fixed; top: 0; right: -100%; width: 400px; height: 100%;
+            background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(30px);
+            border-left: 1px solid var(--glass-border); z-index: 7999;
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; justify-content: center; padding: 60px;
+        }
+        .side-nav.active { right: 0; }
+        .nav-link {
+            text-decoration: none; color: #fff; font-family: var(--font-title); font-size: 1.5rem;
+            margin: 20px 0; letter-spacing: 3px; transition: 0.3s; opacity: 0.6;
+        }
+        .nav-link:hover { opacity: 1; color: var(--accent-gold); transform: translateX(10px); }
+        .nav-small { font-family: var(--font-body); font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 5px; }
+
+        /* === CONTAINER & SECTIONS === */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
+        
+        .unit-section { margin-bottom: 120px; }
+        
+        .unit-header {
+            display: flex; align-items: baseline; border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px; margin-bottom: 40px;
+        }
+        .unit-name {
+            font-family: var(--font-title); font-size: 2rem; font-weight: 700;
+            color: var(--unit-color); margin-right: 15px;
+        }
+        .unit-name-kr { font-family: var(--font-title); font-size: 1rem; color: #666; letter-spacing: 2px; }
+        .unit-code {
+            margin-left: auto; font-size: 0.7rem; color: #444; font-family: var(--font-body);
+            letter-spacing: 2px; border: 1px solid #222; padding: 3px 10px;
+        }
+
+        /* === CHARACTER GRID & CARD === */
+        .char-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 40px;
+        }
+
+        .char-card {
+            background: transparent; text-decoration: none; color: inherit;
+            transition: transform 0.4s ease;
+        }
+
+        /* MUGSHOT AREA */
+        .img-box {
+            width: 100%; aspect-ratio: 3 / 4; position: relative; overflow: hidden;
+            background: #151515; border: 1px solid var(--glass-border); margin-bottom: 20px;
+        }
+        .char-img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%) brightness(0.7) contrast(1.1);
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .char-card:hover .char-img {
+            filter: grayscale(0%) brightness(0.9);
+            transform: scale(1.03);
+        }
+
+        /* 머그샷 가이드라인 (Agent 느낌) */
+        .mugshot-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 20px solid transparent; pointer-events: none; box-sizing: border-box;
+            transition: 0.3s;
+        }
+        .char-card:hover .mugshot-overlay { border: 1px solid rgba(197, 163, 88, 0.2); }
+        
+        .rec-label {
+            position: absolute; top: 15px; left: 15px; font-size: 0.6rem;
+            color: var(--accent-gold); font-weight: bold; opacity: 0.5;
+        }
+
+        /* INFO AREA */
+        .info-box { padding: 0 5px; }
+        .char-name {
+            font-family: var(--font-title); font-size: 1.2rem; color: #fff;
+            margin-bottom: 4px; display: block;
+        }
+        .char-role {
+            font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px;
+            text-transform: uppercase; display: block; margin-bottom: 12px;
+        }
+        
+        /* BADGES (Modern & Small) */
+        .badge-row { display: flex; gap: 6px; }
+        .badge {
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 2px;
+            border: 1px solid var(--unit-color); color: var(--unit-color);
+            text-transform: uppercase; font-weight: 600;
+        }
+        .badge.rank { background: var(--unit-color); color: #000; }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center; padding: 100px 0; opacity: 0.3;
+            font-size: 0.7rem; letter-spacing: 5px; border-top: 1px solid #222;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .side-nav { width: 100%; }
+            .page-title { font-size: 1.8rem; }
+            .unit-name { font-size: 1.5rem; }
+            .char-grid { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 메뉴 버튼 -->
+    <button class="menu-btn" onclick="toggleNav()">
+        <span class="menu-line"></span>
+    </button>
+
+    <!-- 사이드 메뉴 패널 -->
+    <div class="side-nav" id="sideNav">
+        <a href="index.html" class="nav-link">HOME<span class="nav-small">시스템 메인 페이지</span></a>
+        <a href="worldview.html" class="nav-link">WORLDVIEW<span class="nav-small">세계관 아카이브</span></a>
+        <a href="playguide.html" class="nav-link">GUIDE<span class="nav-small">이용 가이드</span></a>
+        <div style="margin-top:auto; font-size: 0.7rem; color: var(--accent-gold); letter-spacing: 2px;">
+            因果後 PERSONNEL ARCHIVE v2.0
+        </div>
+    </div>
+
+    <!-- 타이틀 영역 -->
+    <header class="page-header">
+        <h1 class="page-title">因果後 : ARCHIVE</h1>
+        <div class="page-subtitle">Classified Personnel Dossier // 인과를 넘어서는 자들</div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. 월하대 (Deep Plum Theme) -->
+        <section class="unit-section" style="--unit-color: #8a63a5;">
+            <div class="unit-header">
+                <span class="unit-name">WOLHA</span>
+                <span class="unit-name-kr">월하대 (月下隊)</span>
+                <div class="unit-code">DIV_7048</div>
+            </div>
+
+            <div class="char-grid">
+                <!-- 아니마 -->
+                <a href="anima.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/LMSnhQh/IMG-7055.jpg" alt="Anima" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_01</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">아니마 (Anima)</span>
+                        <span class="char-role">UNIT LEADER</span>
+                        <div class="badge-row">
+                            <span class="badge rank">만월</span>
+                            <span class="badge">단장</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 시로 -->
+                <a href="시로.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/XxsC6w03/IMG-7093.jpg" alt="Shiro" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_02</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">시로 (白)</span>
+                        <span class="char-role">OPERATIVE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">반월</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 오팔 -->
+                <a href="오팔.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/zTKwL8Sx/IMG-7198.jpg" alt="Opal" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_03</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Opal (오팔)</span>
+                        <span class="char-role">OPERATIVE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">반월</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 와이퍼 -->
+                <a href="와이퍼.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/vvvJNHj9/IMG-7202.jpg" alt="Wiper" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_04</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Wiper (와이퍼)</span>
+                        <span class="char-role">ELITE AGENT</span>
+                        <div class="badge-row">
+                            <span class="badge rank">만월</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. 잔월대 (Slate Silver Theme) -->
+        <section class="unit-section" style="--unit-color: #999999;">
+            <div class="unit-header">
+                <span class="unit-name">JANWOL</span>
+                <span class="unit-name-kr">잔월대 (殘月隊)</span>
+                <div class="unit-code">DIV_7112</div>
+            </div>
+
+            <div class="char-grid">
+                <!-- 도체레 -->
+                <a href="도체레.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/27JV210L/IMG-7094.jpg" alt="Docere" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_05</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">도체레 (Docēre)</span>
+                        <span class="char-role">UNIT LEADER</span>
+                        <div class="badge-row">
+                            <span class="badge rank" style="background:var(--accent-gold);">극성</span>
+                            <span class="badge">단장</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 하진 -->
+                <a href="hajin.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/svFHh2PZ/IMG-7092.jpg" alt="Hajin" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_06</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">하진 (河眞)</span>
+                        <span class="char-role">ROOKIE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">초승</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 로리넥스 -->
+                <a href="로리넥스.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/zWjsDq9P/IMG-7139.jpg" alt="Lorinex" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_07</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Lorinex (로리넥스)</span>
+                        <span class="char-role">ROOKIE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">초승</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 스페씨 -->
+                <a href="스페씨.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/DDLqRzrT/IMG-7201.jpg" alt="Spe.c" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_08</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Spe. c (스페씨)</span>
+                        <span class="char-role">OPERATIVE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">만월</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 3. 묵야단 (Deep Sage Theme) -->
+        <section class="unit-section" style="--unit-color: #5d7a6a;">
+            <div class="unit-header">
+                <span class="unit-name">MUKYA</span>
+                <span class="unit-name-kr">묵야단 (黙夜團)</span>
+                <div class="unit-code">DIV_7113</div>
+            </div>
+
+            <div class="char-grid">
+                <!-- 설도진 -->
+                <a href="설도진.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/PZC7CfrV/IMG-7090.jpg" alt="Seol" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_09</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">설도진 (薛刀眞)</span>
+                        <span class="char-role">UNIT LEADER</span>
+                        <div class="badge-row">
+                            <span class="badge rank">만월</span>
+                            <span class="badge">단장</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 큐리 -->
+                <a href="큐리.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/Mkh61m7x/IMG-7136.jpg" alt="Curi" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_10</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Curi (큐리)</span>
+                        <span class="char-role">OPERATIVE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">반월</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 라이코스 -->
+                <a href="라이코스.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/5gkbKj5G/IMG-7203.jpg" alt="Lycos" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_11</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Lycos (라이코스)</span>
+                        <span class="char-role">ROOKIE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">초승</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 디에고 -->
+                <a href="#" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/mVR0gWy2/IMG-7298.jpg" alt="Diego" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_12</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">디에고 (THE★EGO)</span>
+                        <span class="char-role">SPECIALIST</span>
+                        <div class="badge-row">
+                            <span class="badge rank" style="background:var(--accent-gold);">극성</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. 백월여단 (Warm Gold Theme) -->
+        <section class="unit-section" style="--unit-color: #a3967d;">
+            <div class="unit-header">
+                <span class="unit-name">BAEKWOL</span>
+                <span class="unit-name-kr">백월여단 (白月旅團)</span>
+                <div class="unit-code">DIV_7114</div>
+            </div>
+
+            <div class="char-grid">
+                <!-- 몬스타 -->
+                <a href="몬스타.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/Cs3Bb3wS/IMG-7091.jpg" alt="Mournesta" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_13</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">몬스타 (Mournesta)</span>
+                        <span class="char-role">UNIT LEADER</span>
+                        <div class="badge-row">
+                            <span class="badge rank" style="background:var(--accent-gold);">극성</span>
+                            <span class="badge">단장</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 베렌 -->
+                <a href="베렌.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/DfFtdg2J/IMG-7137.jpg" alt="Valen" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_14</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">베렌 (Valen)</span>
+                        <span class="char-role">ROOKIE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">초승</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 베스페리스 -->
+                <a href="베스페리스.html" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/C3N8Dgnn/IMG-7138.jpg" alt="Vesperis" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_15</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">Vesperis (베스페리스)</span>
+                        <span class="char-role">OPERATIVE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">반월</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 노에 -->
+                <a href="#" class="char-card">
+                    <div class="img-box">
+                        <img src="https://i.ibb.co/bM18ydPM/IMG-7301.jpg" alt="Noe" class="char-img">
+                        <div class="mugshot-overlay"></div>
+                        <div class="rec-label">SUBJECT_16</div>
+                    </div>
+                    <div class="info-box">
+                        <span class="char-name">노에 (Noe)</span>
+                        <span class="char-role">ROOKIE</span>
+                        <div class="badge-row">
+                            <span class="badge rank">초승</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            CONFIDENTIAL ARCHIVE // 因果後 ALL RIGHTS RESERVED.
+        </footer>
+
+    </div>
+
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('sideNav');
+            const btn = document.querySelector('.menu-btn');
+            nav.classList.toggle('active');
+            btn.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
