@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因果後 - Beyond Cause and Effect</title>
+    <!-- 폰트: 고전적인 세리프(Cinzel, Noto Serif)와 현대적인 산세리프(Inter) 조합 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@200;400;600&family=Noto+Serif+KR:wght@300;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0d0d0d; /* 깊은 차콜 블랙 */
+            --accent-gold: #c5a358; /* 은은한 골드 (판타지 포인트) */
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --font-title: 'Cinzel', 'Noto Serif KR', serif;
+            --font-body: 'Inter', sans-serif;
+            --glass: rgba(20, 20, 20, 0.7);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 배경에 아주 미세한 입자감과 그라데이션 추가 */
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+        }
+
+        /* 은은한 배경 장식 (판타지 느낌의 빛 무리) */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(197, 163, 88, 0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* === 메인 중앙 타이틀 === */
+        .main-container {
+            text-align: center;
+            z-index: 5;
+            animation: fadeIn 2.5s ease-out;
+        }
+
+        .main-title {
+            font-family: var(--font-title);
+            font-size: 5.5rem;
+            font-weight: 700;
+            letter-spacing: 12px;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-title {
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            letter-spacing: 6px;
+            margin-top: 15px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--accent-gold);
+            margin: 30px auto;
+            opacity: 0.5;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            line-height: 1.8;
+            font-weight: 200;
+        }
+
+        /* === 맥북/웹 감성의 미니멀 햄버거 버튼 === */
+        .menu-btn {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+            z-index: 1000;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-lines {
+            display: block;
+            width: 24px;
+            height: 1px;
+            background-color: var(--text-main);
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .menu-lines::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 1px;
+            background-color: var(--text-main);
+            top: -8px; left: 0;
+            transition: 0.4s;
+        }
+
+        /* 열렸을 때 X 형태 */
+        .menu-btn.open .menu-lines { background: transparent; }
+        .menu-btn.open .menu-lines::before { top: 0; transform: rotate(45deg); }
+        .menu-btn.open .menu-lines::after { content: ''; position: absolute; width: 24px; height: 1px; background-color: var(--text-main); top: 0; left: 0; transform: rotate(-45deg); transition: 0.4s; }
+
+
+        /* === 슬라이드 메뉴 패널 (Glassmorphism) === */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 450px;
+            height: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(25px); /* 애플 느낌의 강력한 블러 */
+            -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 999;
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px;
+        }
+        
+        .nav-overlay.active {
+            right: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-main);
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            transition: 0.4s;
+            position: relative;
+            opacity: 0.6;
+        }
+
+        .nav-item:hover {
+            opacity: 1;
+            color: var(--accent-gold);
+            transform: translateX(10px);
+        }
+
+        .nav-desc {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: block;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .nav-overlay { width: 100%; }
+            .main-title { font-size: 3.5rem; letter-spacing: 8px; }
+            .menu-btn { top: 30px; right: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <!-- 우측 상단 메뉴 버튼 -->
+    <button class="menu-btn" onclick="toggleMenu()">
+        <span class="menu-lines"></span>
+    </button>
+
+    <!-- 슬라이드 메뉴 패널 -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-links">
+            <a href="worldview.html" class="nav-item">
+                WORLDVIEW
+                <span class="nav-desc">신화의 끝에서 시작되는 기록</span>
+            </a>
+            
+            <a href="character.html" class="nav-item">
+                PERSONA
+                <span class="nav-desc">인과를 넘어서는 자들의 군상극</span>
+            </a>
+
+            <a href="archive.html" class="nav-item">
+                ARCHIVE
+                <span class="nav-desc">잊혀진 시대의 단편들</span>
+            </a>
+
+            <a href="playguide.html" class="nav-item">
+                GUIDE
+                <span class="nav-desc">시스템 접속 및 가이드</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 메인 중앙 컨텐츠 -->
+    <div class="main-container">
+        <h1 class="main-title">因果後</h1>
+        <div class="sub-title">Beyond Cause and Effect</div>
+        <div class="divider"></div>
+        <p class="description">
+            사건의 지평선 너머, 흩어진 기억의 조각들을 마주하십시오.<br>
+            모든 결과에는 원인이 있으나, 그 끝은 오직 당신만이 결정합니다.
+        </p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('navOverlay');
+            const btn = document.querySelector('.menu-btn');
+            
+            nav.classList.toggle('active');
+            btn.classList.toggle('open');
+        }
+
+        // 배경에 미세하게 따라오는 조명 효과 (선택 사항)
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.querySelector('.bg-glow');
+            const x = e.clientX;
+            const y = e.clientY;
+            glow.style.left = (x - 300) + 'px';
+            glow.style.top = (y - 300) + 'px';
+        });
+    </script>
+</body>
+</html>
