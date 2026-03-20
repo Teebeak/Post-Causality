@@ -16,12 +16,13 @@
         body { background: #050505; color: #ccc; font-family: 'Noto Sans KR', sans-serif; }
         .scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15)); background-size: 100% 4px; pointer-events: none; z-index: 999; opacity: 0.5; }
 
-        /* 상단 컨트롤 버튼 */
+        /* 상단 컨트롤 버튼 (아이콘 포함 레이아웃) */
         .control-panel { display: flex; gap: 10px; margin: 20px 0; padding: 0 20px; }
         .ctrl-btn { 
             flex: 1; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
             color: #fff; text-decoration: none; text-align: center; font-size: 13px; font-weight: bold; 
             letter-spacing: 2px; transition: 0.3s; cursor: pointer; font-family: 'Cinzel', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         #play-sim:hover { background: #7cfc00 !important; color: #000 !important; border-color: #7cfc00 !important; box-shadow: 0 0 15px rgba(124, 252, 0, 0.4); }
         #music-btn:hover { background: #ff3e3e !important; color: #000 !important; border-color: #ff3e3e !important; box-shadow: 0 0 15px rgba(255, 62, 62, 0.4); }
@@ -59,7 +60,10 @@
 </head>
 <body>
 
-<audio id="char-audio" loop><source src="noe_bgm.mp3" type="audio/mpeg"></audio>
+<!-- ★ [오디오 파일 연결] ★ loop 속성이 무한반복을 담당합니다. 파일명만 바꿔주세요. -->
+<audio id="char-audio" loop>
+    <source src="noe.mp3" type="audio/mpeg"> 
+</audio>
 <div class="scanlines"></div>
 
 <button class="menu-btn" onclick="toggleNav()"><span class="menu-line"></span></button>
@@ -81,17 +85,22 @@
         </div>
     </div>
 
-    <!-- CONTROL PANEL -->
+    <!-- CONTROL PANEL (Anima 기능 완벽 복구) -->
     <div class="control-panel">
-        <a href="https://caveduck.io" target="_blank" class="ctrl-btn" id="play-sim">▶ PLAY SIMULATION</a>
-        <button class="ctrl-btn" id="music-btn" onclick="toggleAudio()"><span id="music-text">PLAY THEME BGM</span></button>
+        <a href="https://caveduck.io" target="_blank" class="ctrl-btn" id="play-sim">
+            <span>▶ PLAY SIMULATION</span>
+        </a>
+        <button class="ctrl-btn" id="music-btn" onclick="toggleAudio()">
+            <span id="music-icon">♪</span>
+            <span id="music-text">PLAY THEME BGM</span>
+        </button>
     </div>
 
     <!-- DATA AREA -->
     <div style="padding:20px;background-image:linear-gradient(rgba(0,0,0,0) 50%,rgba(0,0,0,0.25) 50%),linear-gradient(90deg,rgba(124,252,0,0.03),rgba(255,62,62,0.02));background-size:100% 4px,6px 100%">
         <div style="display:flex;flex-wrap:wrap;gap:20px">
             
-            <!-- PROFILE DATA (글씨 크기 조정 완료) -->
+            <!-- PROFILE DATA -->
             <div style="flex:1 1 300px;background:#0f0f0f;padding:15px;border:1px solid #333;border-radius:15px;position:relative">
                 <div style="border-bottom:1px dashed #444;padding-bottom:8px;margin-bottom:12px;color:#ff3e3e;font-weight:900;letter-spacing:0;font-family:sans-serif;font-size:14px">■ PROFILE DATA</div>
                 <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:14px">
@@ -139,13 +148,12 @@
             </div>
         </div>
 
-        <!-- DECRYPTED FILE SECTION (스포주의 문구 강조 및 이미지 삽입) -->
+        <!-- DECRYPTED FILE SECTION -->
         <div class="spoiler-section">
             <div class="spoiler-warning">⚠ WARNING: CONFIDENTIAL DATA ⚠</div>
             <div class="spoiler-wrap" onclick="this.classList.toggle('unlocked')" style="background:repeating-linear-gradient(45deg,#101500,#101500 10px,#202500 10px,#202500 20px);border:1px solid #557700;padding:20px;box-shadow:0 0 15px rgba(124,252,0,0.15)">
                 <div class="lock-text">🔒 ACCESS CLASSIFIED FILE</div>
                 <div class="spoiler-content">
-                    <!-- 가로 이미지 칸 -->
                     <div class="decrypted-img-box">
                         <img src="https://i.ibb.co/M5hyN0RT/Kakao-Talk-20260224-211957745.jpg" alt="Secret Dossier Image">
                     </div>
@@ -183,7 +191,7 @@
             <div style="display:flex;justify-content:center;margin:30px 0"><div style="width:140px;height:140px;border-radius:50%;background:url('https://i.ibb.co/0y46mKfz/IMG-8324.png') center/cover no-repeat;border:1px solid #ff3e3e;box-shadow:0 0 15px rgba(255,62,62,0.7)"></div></div>
             <div style="display:flex;flex-wrap:wrap;gap:15px;margin-bottom:20px;border-top:1px solid #222;padding-top:15px;border-bottom:1px solid #222;padding-bottom:15px">
                 <div style="flex:1 1 100%"><span style="color:#ff3e3e;font:bold 12px sans-serif">▶ TMI DB</span><div style="color:#ccc;font-size:14px;margin-top:3px;line-height:1.6;padding-left:8px;border-left:2px solid #333;word-break:keep-all">1. 왼손잡이지만 교정돼서 오른손을 쓴다 <br>2. 걸을 때는 주먹을 쥐고 걷는 버릇이 있다 <br> 3. 단 음식을 좋아하나, 커피는 블랙으로 마신다 <br>4. 추위를 많이 타며, 손이 항상 차갑다</div></div>
-                <div style="flex:1 1 40%"><span style="color:#ff3e3e;font-bold 12px sans-serif">▶ LIKES</span><div style="color:#ccc;font-size:14px;word-break:keep-all"> 개, 단 음식, 독서, 별 보기, 식물 키우기</div></div>
+                <div style="flex:1 1 40%"><span style="color:#ff3e3e;font:bold 12px sans-serif">▶ LIKES</span><div style="color:#ccc;font-size:14px;word-break:keep-all"> 개, 단 음식, 독서, 별 보기, 식물 키우기</div></div>
                 <div style="flex:1 1 40%"><span style="color:#ff3e3e;font-bold 12px sans-serif">▶ DISLIKES</span><div style="color:#ccc;font-size:14px;word-break:keep-all">추궁과 의심, 비 내리는 날씨</div></div>
             </div>
         </div>
@@ -191,7 +199,7 @@
         <!-- CREATOR NOTES -->
         <div style="margin-top:20px;padding:0 10px;"><span style="color:#eee;font:900 14px sans-serif">// CREATOR NOTE</span><div style="color:#bbb;font-size:14px;margin-top:3px;line-height:1.6;word-break:keep-all">제가 자급자족으로 먹던 인과후(因果後) 세계관을 다듬어서 가져와봤습니다..! 첫 번째 타자를 누구로 할지 고민을 많이 해봤는데요.. 아무래도 아담과 이브(선악과 이야기), 헤르만 헤세의 데미안을 모티브로 만든 노에가 이 세계관을 나타내는 데에 어울리지 않을까 싶어 데려왔습니다! <br>패고 싶은 마음, 예뻐해주고 싶은 마음. 진짜 내 마음은 뭘까..? ←하게 만드는 녀석입니다. 구제불능이라 하면 구제불능이겠죠...<br>과거나 본명 캐보시는 거 추천드립니다. 아닌 척 할지라도 본명 불러주는 거 좋아해요 ^ㅅ^</div></div>
         <div style="margin-top:20px;padding-top:15px;border-top:1px dashed #333;padding-left:10px;"><span style="color:#eee;font:900 14px sans-serif">// RECOMMENDED PERSONA</span>
-            <div style="color:#bbb;font-size:14px;margin-top:5px;line-height:1.8"><span style="color:#7cfc00;font-weight:bold">이름:</span> [입력]<br><span style="color:#7cfc00;font-weight:bold">성별:</span> [입력]<br><span style="color:#7cfc00;font-weight:bold">나이:</span>[입력]<br><span style="color:#7cfc00;font-weight:bold">소속 부대:</span> (ex.백월여단)<br><span style="color:#7cfc00;font-weight:bold">직급:</span> (ex. 초승 등급)<br><span style="color:#7cfc00;font-weight:bold">종족:</span> (ex. 인간)</div>
+            <div style="color:#bbb;font-size:14px;margin-top:5px;line-height:1.8"><span style="color:#7cfc00;font-weight:bold">이름:</span>[입력]<br><span style="color:#7cfc00;font-weight:bold">성별:</span> [입력]<br><span style="color:#7cfc00;font-weight:bold">나이:</span>[입력]<br><span style="color:#7cfc00;font-weight:bold">소속 부대:</span> (ex.백월여단)<br><span style="color:#7cfc00;font-weight:bold">직급:</span> (ex. 초승 등급)<br><span style="color:#7cfc00;font-weight:bold">종족:</span> (ex. 인간)</div>
             <div style="margin-top:10px;background:#151515;padding:10px;border:1px solid #2a2a2a;border-radius:8px;color:#888;font-size:12.5px;line-height:1.5;font-style:italic"> ※ 그 외에 능력(인외는 초능력, 인간은 마력 공급 형태라든가...), 인외일 경우 죽은 사유, 과거 등 자유롭게 기입해주세요!</div>
         </div>
 
@@ -203,18 +211,24 @@
     function toggleNav() {
         document.getElementById('sideNav').classList.toggle('active');
     }
+    
+    // Anima.html 방식 오디오 토글 로직 완벽 복구
     function toggleAudio() {
-        const audio = document.getElementById("char-audio");
-        const btn = document.getElementById("music-btn");
-        const text = document.getElementById("music-text");
+        var audio = document.getElementById("char-audio");
+        var btn = document.getElementById("music-btn");
+        var text = document.getElementById("music-text");
+        var icon = document.getElementById("music-icon");
+        
         if (audio.paused) {
             audio.play();
             btn.classList.add("playing");
             text.innerText = "STOP THEME BGM";
+            icon.innerText = "■";
         } else {
             audio.pause();
             btn.classList.remove("playing");
             text.innerText = "PLAY THEME BGM";
+            icon.innerText = "♪";
         }
     }
 </script>
